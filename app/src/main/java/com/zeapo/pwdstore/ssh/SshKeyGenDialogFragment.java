@@ -107,7 +107,11 @@ public class SshKeyGenDialogFragment extends DialogFragment {
 
                 File file = new File(a.getFilesDir() + "/.ssh_key");
                 FileOutputStream out = new FileOutputStream(file, false);
-                kp.writePrivateKey(out, passphrase.getBytes());
+                if (passphrase.length() > 0) {
+                    kp.writePrivateKey(out, passphrase.getBytes());
+                } else {
+                    kp.writePrivateKey(out);
+                }
 
                 file = new File(a.getFilesDir() + "/.ssh_key.pub");
                 out = new FileOutputStream(file, false);
