@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="72dp"
+              android:background="@color/grey_white_1000">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+
+        <RelativeLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/private_key_icon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_action_vpn_key"
+                android:tint="@color/blue_grey_500"/>
+
+            <ImageView
+                android:id="@+id/public_key_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/private_key_icon"
+                android:src="@drawable/ic_action_vpn_key"
+                android:tint="@color/blue_grey_500"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="id_rsa"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+            <TextView
+                android:id="@+id/repository"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Repository"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right">
+
+            <ImageView
+                android:id="@+id/action"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="15dp"
+                android:src="@drawable/ic_action_folder"
+                android:tint="@color/blue_grey_500"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

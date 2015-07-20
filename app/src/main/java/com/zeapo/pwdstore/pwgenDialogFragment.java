@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -34,8 +33,7 @@ public class pwgenDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final Activity callingActivity = getActivity();
-        LayoutInflater inflater = callingActivity.getLayoutInflater();
-        final View view = inflater.inflate(R.layout.fragment_pwgen, null);
+        final View view = View.inflate(callingActivity, R.layout.fragment_pwgen, null);
         Typeface monoTypeface = Typeface.createFromAsset(callingActivity.getAssets(), "fonts/sourcecodepro.ttf");
 
         builder.setView(view);

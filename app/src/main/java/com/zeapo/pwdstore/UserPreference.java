@@ -19,6 +19,9 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import com.zeapo.pwdstore.crypto.PgpHandler;
 import com.zeapo.pwdstore.git.GitActivity;
+import com.zeapo.pwdstore.ssh.ShowSshKeyDialogFragment;
+import com.zeapo.pwdstore.ssh.SshKeyActivity;
+import com.zeapo.pwdstore.ssh.SshKeyGenDialogFragment;
 import com.zeapo.pwdstore.utils.PasswordRepository;
 
 import net.rdrei.android.dirchooser.DirectoryChooserActivity;
@@ -94,12 +97,20 @@ public class UserPreference extends AppCompatActivity {
             findPreference("ssh_see_key").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    DialogFragment df = new SshKeyGen.ShowSshKeyFragment();
+                    DialogFragment df = new ShowSshKeyDialogFragment();
                     df.show(getFragmentManager(), "public_key");
                     return true;
                 }
             });
 
+            findPreference("ssh_key_management").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent intent = new Intent(callingActivity, SshKeyActivity.class);
+                    startActivityForResult(intent, -1);
+                    return true;
+                }
+            });
 
             findPreference("git_server_info").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
@@ -253,10 +264,11 @@ public class UserPreference extends AppCompatActivity {
      * Opens a key generator to generate a public/private key pair
      */
     public void makeSshKey() {
-        Intent intent = new Intent(getApplicationContext(), SshKeyGen.class);
-        startActivity(intent);
-        setResult(RESULT_OK);
-        finish();
+        DialogFragment df = new SshKeyGenDialogFragment();
+        df.show(getFragmentManager(), "public_key");
+//        Intent intent = new Intent(getApplicationContext(), SshKeyGen.class);
+//        startActivityForResult(intent, -1);
+//        finish();
     }
 
     private void copySshKey(Uri uri) throws IOException {
