@@ -25,5 +25,13 @@ public class SshKeyItem {
 
     public String getName() { return this.name; }
 
+    @Override
+    public boolean equals(Object o){
+        if (!(o instanceof SshKeyItem)) {
+            return false;
+        }
+        SshKeyItem other = (SshKeyItem) o;
+        return other.getName().equals(this.getName());
+    }
 
 }

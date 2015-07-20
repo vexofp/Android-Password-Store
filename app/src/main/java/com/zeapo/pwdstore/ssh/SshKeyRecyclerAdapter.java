@@ -9,10 +9,11 @@ import android.widget.TextView;
 
 import com.zeapo.pwdstore.R;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SshKeyRecyclerAdapter extends RecyclerView.Adapter<SshKeyRecyclerAdapter.ViewHolder> {
-    private ArrayList<SshKeyItem> keys;
+    private final ArrayList<SshKeyItem> keys;
     public OnViewHolderClickListener listener;
 
     // Provide a reference to the views for each data item
@@ -78,10 +79,37 @@ public class SshKeyRecyclerAdapter extends RecyclerView.Adapter<SshKeyRecyclerAd
 
     }
 
-
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return keys.size();
+        return this.keys.size();
     }
+
+    public ArrayList<SshKeyItem> getKeys() {
+        return this.keys;
+    }
+
+    public void clear() {
+        int itemCount = getItemCount();
+        this.keys.clear();
+        this.notifyItemRangeRemoved(0, itemCount);
+    }
+
+    public void addAll(ArrayList<SshKeyItem> list) {
+        int positionStart = getItemCount();
+        this.keys.addAll(list);
+        this.notifyItemRangeInserted(positionStart, list.size());
+    }
+
+    public void add(SshKeyItem item) {
+        this.keys.add(item);
+        this.notifyItemInserted(keys.size());
+    }
+
+    public void remove(int position) {
+        this.keys.remove(position);
+        this.notifyItemRemoved(position);
+    }
+
+
 }
