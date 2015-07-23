@@ -22,7 +22,7 @@ public class SshKeyRecyclerAdapter extends RecyclerView.Adapter<SshKeyRecyclerAd
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public View view;
         public TextView name;
-        public TextView repository;
+        // public TextView repository;
         public ImageView privateKeyIcon;
         public ImageView publicKeyIcon;
 
@@ -30,26 +30,26 @@ public class SshKeyRecyclerAdapter extends RecyclerView.Adapter<SshKeyRecyclerAd
             super(view);
             this.view = view;
             name = (TextView) view.findViewById(R.id.name);
-            repository = (TextView) view.findViewById(R.id.repository);
+            // repository = (TextView) view.findViewById(R.id.repository);
             privateKeyIcon = (ImageView) view.findViewById(R.id.private_key_icon);
             publicKeyIcon = (ImageView) view.findViewById(R.id.public_key_icon);
             view.setOnClickListener(this);
-            view.findViewById(R.id.action).setOnClickListener(this);
+            view.findViewById(R.id.show_key).setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             if (v instanceof ImageView) {
-                listener.onImageClick((ImageView) v);
+                listener.onImageClick(this.getLayoutPosition(), (ImageView) v);
             } else {
-                listener.onViewClick(v);
+                listener.onViewClick(this.getLayoutPosition(), v);
             }
         }
     }
 
     public interface OnViewHolderClickListener {
-        void onImageClick(ImageView imageView);
-        void onViewClick(View view);
+        void onImageClick(int position, ImageView imageView);
+        void onViewClick(int position, View view);
     }
 
     public void setListener(OnViewHolderClickListener listener) {

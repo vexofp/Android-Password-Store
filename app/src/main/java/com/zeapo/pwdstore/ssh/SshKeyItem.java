@@ -25,6 +25,8 @@ public class SshKeyItem {
 
     public String getName() { return this.name; }
 
+    public File getPublic() { return this.publicKey; }
+
     @Override
     public boolean equals(Object o){
         if (!(o instanceof SshKeyItem)) {

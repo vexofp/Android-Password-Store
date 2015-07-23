@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -30,7 +31,9 @@ public class ShowSshKeyDialogFragment extends DialogFragment {
         builder.setView(view);
 
         TextView textView = (TextView) view.findViewById(R.id.public_key);
-        File file = new File(getActivity().getFilesDir() + "/.ssh_key.pub");
+        String filename = getArguments().getString("filename");
+        Log.d("filename", filename);
+        File file = new File(getActivity().getFilesDir() + "/" + filename);
         try {
             textView.setText(FileUtils.readFileToString(file));
         } catch (Exception e) {

@@ -5,13 +5,28 @@
               android:background="@color/grey_white_1000">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin">
+
+        <!-- radio button for picking the key for the git repository. will not
+        be necessary when multiple git repos-->
+        <RelativeLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center">
+
+            <RadioButton
+                android:id="@+id/pick_key"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="40dp"
@@ -27,12 +42,11 @@
 
             <ImageView
                 android:id="@+id/public_key_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_below="@+id/private_key_icon"
                 android:src="@drawable/ic_action_vpn_key"
                 android:tint="@color/blue_grey_500"/>
-
         </RelativeLayout>
 
         <LinearLayout
@@ -49,12 +63,12 @@
                 android:text="id_rsa"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-            <TextView
-                android:id="@+id/repository"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Repository"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <!--<TextView-->
+            <!--android:id="@+id/repository"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Repository"-->
+            <!--android:textAppearance="?android:attr/textAppearanceSmall"/>-->
         </LinearLayout>
 
         <RelativeLayout
@@ -63,11 +77,11 @@
             android:gravity="center_vertical|right">
 
             <ImageView
-                android:id="@+id/action"
+                android:id="@+id/show_key"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:padding="15dp"
-                android:src="@drawable/ic_action_folder"
+                android:src="@drawable/ic_action_remove_red_eye"
                 android:tint="@color/blue_grey_500"/>
 
         </RelativeLayout>
