@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,7 +46,8 @@ public class SshKeyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getFragmentManager().beginTransaction()
-                        .replace(android.R.id.content, new AddSshKeyFragment()).commit();
+                        .add(android.R.id.content, new AddSshKeyFragment())
+                        .addToBackStack("add_key").commit();
             }
         });
 
@@ -64,8 +64,8 @@ public class SshKeyActivity extends AppCompatActivity {
 
             @Override
             public void onViewClick(int position, View view) {
-                Log.d("click", "elsewhere");
             }
+
         });
 
         setTitle("Choose SSH key");
@@ -154,6 +154,5 @@ public class SshKeyActivity extends AppCompatActivity {
             }
         }
     }
-
 }
 

@@ -139,10 +139,6 @@ public class SshKeyGenDialogFragment extends DialogFragment {
                 Toast.makeText(a, "SSH-key generated", Toast.LENGTH_LONG).show();
                 DialogFragment df = new ShowSshKeyDialogFragment();
                 df.show(a.getFragmentManager(), "public_key");
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(a.getApplicationContext());
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putBoolean("use_generated_key", true);
-                editor.apply();
             } else {
                 new AlertDialog.Builder(a)
                         .setTitle("Error while trying to generate the ssh-key")

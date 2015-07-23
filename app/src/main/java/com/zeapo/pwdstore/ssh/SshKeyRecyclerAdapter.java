@@ -1,10 +1,13 @@
 package com.zeapo.pwdstore.ssh;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.zeapo.pwdstore.R;
@@ -15,6 +18,7 @@ import java.util.ArrayList;
 public class SshKeyRecyclerAdapter extends RecyclerView.Adapter<SshKeyRecyclerAdapter.ViewHolder> {
     private final ArrayList<SshKeyItem> keys;
     public OnViewHolderClickListener listener;
+    public RadioButton pickedKey;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -23,16 +27,16 @@ public class SshKeyRecyclerAdapter extends RecyclerView.Adapter<SshKeyRecyclerAd
         public View view;
         public TextView name;
         // public TextView repository;
-        public ImageView privateKeyIcon;
         public ImageView publicKeyIcon;
+        public RadioButton pickKey;
 
         public ViewHolder(View view) {
             super(view);
             this.view = view;
             name = (TextView) view.findViewById(R.id.name);
             // repository = (TextView) view.findViewById(R.id.repository);
-            privateKeyIcon = (ImageView) view.findViewById(R.id.private_key_icon);
             publicKeyIcon = (ImageView) view.findViewById(R.id.public_key_icon);
+            pickKey = (RadioButton) view.findViewById(R.id.pick_key);
             view.setOnClickListener(this);
             view.findViewById(R.id.show_key).setOnClickListener(this);
         }
@@ -77,6 +81,27 @@ public class SshKeyRecyclerAdapter extends RecyclerView.Adapter<SshKeyRecyclerAd
             holder.publicKeyIcon.setVisibility(View.GONE);
         }
 
+        final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(holder.view.getContext());
+        final String sshKeyName = settings.getString("ssh_key_name", "/.ssh_key");
+        if (("/" + holder.name.getText()).equals(sshKeyName)) {
+            holder.pickKey.setChecked(true);
+            pickedKey = holder.pickKey;
+        }
+
+        holder.pickKey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RadioButton radioButton = (RadioButton) v;
+                if (!("/" + holder.name.getText()).equals(sshKeyName)) {
+                    if (pickedKey != null) {
+                        pickedKey.setChecked(false);
+                    }
+                    radioButton.setChecked(true);
+                    pickedKey = radioButton;
+                    settings.edit().putString("ssh_key_name", "/" + holder.name.getText()).apply();
+                }
+            }
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)

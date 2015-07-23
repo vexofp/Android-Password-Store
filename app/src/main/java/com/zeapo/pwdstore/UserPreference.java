@@ -194,13 +194,6 @@ public class UserPreference extends AppCompatActivity {
             findPreference("pref_select_external").setOnPreferenceChangeListener(resetRepo);
             findPreference("git_external").setOnPreferenceChangeListener(resetRepo);
         }
-
-        @Override
-        public void onStart() {
-            super.onStart();
-            final SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
-            findPreference("ssh_see_key").setEnabled(sharedPreferences.getBoolean("use_generated_key", false));
-        }
     }
 
     @Override
@@ -274,7 +267,9 @@ public class UserPreference extends AppCompatActivity {
     private void copySshKey(Uri uri) throws IOException {
         InputStream sshKey = this.getContentResolver().openInputStream(uri);
         byte[] privateKey = IOUtils.toByteArray(sshKey);
-        FileUtils.writeByteArrayToFile(new File(getFilesDir() + "/.ssh_key"), privateKey);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String sshKeyName = settings.getString("ssh_key_name", ".ssh_key");
+        FileUtils.writeByteArrayToFile(new File(getFilesDir() + "/" + sshKeyName), privateKey);
         sshKey.close();
     }
 
@@ -289,10 +284,6 @@ public class UserPreference extends AppCompatActivity {
                         }
                         copySshKey(data.getData());
                         Toast.makeText(this, this.getResources().getString(R.string.ssh_key_success_dialog_title), Toast.LENGTH_LONG).show();
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putBoolean("use_generated_key", false);
-                        editor.apply();
                         setResult(RESULT_OK);
                         finish();
                     } catch (IOException e) {
