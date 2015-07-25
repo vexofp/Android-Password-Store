@@ -32,7 +32,7 @@ public class ShowSshKeyDialogFragment extends DialogFragment {
 
         TextView textView = (TextView) view.findViewById(R.id.public_key);
         String filename = getArguments().getString("filename");
-        File file = new File(getActivity().getFilesDir() + "/" + filename);
+        File file = new File(getActivity().getFilesDir() + filename);
         try {
             textView.setText(FileUtils.readFileToString(file));
         } catch (Exception e) {

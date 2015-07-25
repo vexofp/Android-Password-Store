@@ -94,15 +94,6 @@ public class UserPreference extends AppCompatActivity {
                 }
             });
 
-            findPreference("ssh_see_key").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    DialogFragment df = new ShowSshKeyDialogFragment();
-                    df.show(getFragmentManager(), "public_key");
-                    return true;
-                }
-            });
-
             findPreference("ssh_key_management").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
@@ -267,9 +258,12 @@ public class UserPreference extends AppCompatActivity {
     private void copySshKey(Uri uri) throws IOException {
         InputStream sshKey = this.getContentResolver().openInputStream(uri);
         byte[] privateKey = IOUtils.toByteArray(sshKey);
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String sshKeyName = settings.getString("ssh_key_name", ".ssh_key");
-        FileUtils.writeByteArrayToFile(new File(getFilesDir() + "/" + sshKeyName), privateKey);
+        String sshKeyName = "/" + uri.getLastPathSegment();
+        FileUtils.writeByteArrayToFile(new File(getFilesDir() + sshKeyName), privateKey);
+        if (SshKeyActivity.getSshKeys(this).size() == 1) {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+            settings.edit().putString("ssh_key_name", sshKeyName).apply();
+        }
         sshKey.close();
     }
 

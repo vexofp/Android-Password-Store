@@ -1,6 +1,7 @@
 package com.zeapo.pwdstore.ssh;
 
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
@@ -36,7 +37,7 @@ public class SshKeyActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        recyclerAdapter = new SshKeyRecyclerAdapter(getSshKeys());
+        recyclerAdapter = new SshKeyRecyclerAdapter(getSshKeys(this));
         recyclerView.setAdapter(recyclerAdapter);
 
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
@@ -71,8 +72,8 @@ public class SshKeyActivity extends AppCompatActivity {
         setTitle("Choose SSH key");
     }
 
-    public ArrayList<SshKeyItem> getSshKeys() {
-        File path = new File(getFilesDir().toString());
+    public static ArrayList<SshKeyItem> getSshKeys(Context context) {
+        File path = new File(context.getFilesDir().toString());
         File[] files = path.listFiles(new FileFilter() {
             @Override
             public boolean accept(File pathname) {
@@ -135,14 +136,14 @@ public class SshKeyActivity extends AppCompatActivity {
 
     public void refreshAdapter () {
         recyclerAdapter.clear();
-        recyclerAdapter.addAll(getSshKeys());
+        recyclerAdapter.addAll(getSshKeys(this));
     }
 
     public void filterAdapter (String filter) {
         if (filter.isEmpty()) {
             refreshAdapter();
         } else {
-            ArrayList<SshKeyItem> items = getSshKeys();
+            ArrayList<SshKeyItem> items = getSshKeys(this);
             for (SshKeyItem item : items) {
                 boolean matches = item.getName().toLowerCase().contains(filter.toLowerCase());
                 boolean inAdapter = recyclerAdapter.getKeys().contains(item);

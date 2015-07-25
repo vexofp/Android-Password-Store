@@ -129,6 +129,7 @@
     <string name="pwgen_ambiguous">Ambiguous</string>
 
     <!-- ssh keygen fragment -->
+    <string name="ssh_keygen_name">Name</string>
     <string name="ssh_keygen_length">Length</string>
     <string name="ssh_keygen_passphrase">Passphrase</string>
     <string name="ssh_keygen_comment">Comment</string>

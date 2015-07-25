@@ -33,7 +33,7 @@ public class SshKeyRecyclerAdapter extends RecyclerView.Adapter<SshKeyRecyclerAd
         public ViewHolder(View view) {
             super(view);
             this.view = view;
-            name = (TextView) view.findViewById(R.id.name);
+            name = (TextView) view.findViewById(R.id.key_name);
             // repository = (TextView) view.findViewById(R.id.repository);
             publicKeyIcon = (ImageView) view.findViewById(R.id.public_key_icon);
             pickKey = (RadioButton) view.findViewById(R.id.pick_key);

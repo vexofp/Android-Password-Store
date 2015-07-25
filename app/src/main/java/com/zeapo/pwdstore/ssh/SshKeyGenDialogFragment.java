@@ -69,7 +69,11 @@ public class SshKeyGenDialogFragment extends DialogFragment {
         builder.setPositiveButton(getResources().getString(R.string.ssh_keygen_generate), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                new generateTask(v, callingActivity).execute();
+                String sshKeyName = "/" + ((EditText) v.findViewById(R.id.name)).getText().toString();
+                if (sshKeyName.equals("/")) {
+                    sshKeyName = "/.ssh_key";
+                }
+                new generateTask(v, callingActivity, sshKeyName).execute();
             }
         });
 
@@ -82,10 +86,12 @@ public class SshKeyGenDialogFragment extends DialogFragment {
         private View v;
         private Activity a;
         private ProgressDialog pd;
+        private String sshKeyName;
 
-        public generateTask(View v, Activity a) {
+        public generateTask(View v, Activity a, String sshKeyName) {
             this.v = v;
             this.a = a;
+            this.sshKeyName = sshKeyName;
         }
 
         protected Exception doInBackground(Void... voids) {
@@ -105,7 +111,7 @@ public class SshKeyGenDialogFragment extends DialogFragment {
             try {
                 KeyPair kp = KeyPair.genKeyPair(jsch, KeyPair.RSA, length);
 
-                File file = new File(a.getFilesDir() + "/.ssh_key");
+                File file = new File(a.getFilesDir() + sshKeyName);
                 FileOutputStream out = new FileOutputStream(file, false);
                 if (passphrase.length() > 0) {
                     kp.writePrivateKey(out, passphrase.getBytes());
@@ -113,7 +119,7 @@ public class SshKeyGenDialogFragment extends DialogFragment {
                     kp.writePrivateKey(out);
                 }
 
-                file = new File(a.getFilesDir() + "/.ssh_key.pub");
+                file = new File(a.getFilesDir() + sshKeyName + ".pub");
                 out = new FileOutputStream(file, false);
                 kp.writePublicKey(out, comment);
                 return null;
@@ -138,11 +144,18 @@ public class SshKeyGenDialogFragment extends DialogFragment {
             if (e == null) {
                 Toast.makeText(a, "SSH-key generated", Toast.LENGTH_LONG).show();
                 DialogFragment df = new ShowSshKeyDialogFragment();
+                Bundle args = new Bundle();
+                args.putString("filename", sshKeyName + ".pub");
+                df.setArguments(args);
                 df.show(a.getFragmentManager(), "public_key");
+                if (SshKeyActivity.getSshKeys(a).size() == 1) {
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(a);
+                    settings.edit().putString("ssh_key_name", sshKeyName).apply();
+                }
             } else {
                 new AlertDialog.Builder(a)
                         .setTitle("Error while trying to generate the ssh-key")
-                        .setMessage(getResources().getString(R.string.ssh_key_error_dialog_text) + e.getMessage())
+                        .setMessage(a.getResources().getString(R.string.ssh_key_error_dialog_text) + e.getMessage())
                         .setPositiveButton(getResources().getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {

@@ -11,6 +11,20 @@
                   android:paddingRight="@dimen/activity_horizontal_margin"
                   android:orientation="vertical">
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:hintTextAppearance="@style/TextAppearance.AppCompat"
+            android:layout_marginTop="8dp">
+
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/ssh_keygen_name"/>
+        </android.support.design.widget.TextInputLayout>
+
         <TextView
             android:id="@+id/label_length"
             android:layout_width="wrap_content"
