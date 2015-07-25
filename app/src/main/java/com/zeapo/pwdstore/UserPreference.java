@@ -258,8 +258,8 @@ public class UserPreference extends AppCompatActivity {
     private void copySshKey(Uri uri) throws IOException {
         InputStream sshKey = this.getContentResolver().openInputStream(uri);
         byte[] privateKey = IOUtils.toByteArray(sshKey);
-        String sshKeyName = "/" + uri.getLastPathSegment();
-        FileUtils.writeByteArrayToFile(new File(getFilesDir() + sshKeyName), privateKey);
+        String sshKeyName = uri.getLastPathSegment();
+        FileUtils.writeByteArrayToFile(new File(getFilesDir() + "/" + sshKeyName), privateKey);
         if (SshKeyActivity.getSshKeys(this).size() == 1) {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
             settings.edit().putString("ssh_key_name", sshKeyName).apply();

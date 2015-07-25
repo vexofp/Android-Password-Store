@@ -69,9 +69,9 @@ public class SshKeyGenDialogFragment extends DialogFragment {
         builder.setPositiveButton(getResources().getString(R.string.ssh_keygen_generate), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String sshKeyName = "/" + ((EditText) v.findViewById(R.id.name)).getText().toString();
-                if (sshKeyName.equals("/")) {
-                    sshKeyName = "/.ssh_key";
+                String sshKeyName = ((EditText) v.findViewById(R.id.name)).getText().toString();
+                if (sshKeyName.equals("")) {
+                    sshKeyName = ".ssh_key";
                 }
                 new generateTask(v, callingActivity, sshKeyName).execute();
             }
@@ -111,7 +111,7 @@ public class SshKeyGenDialogFragment extends DialogFragment {
             try {
                 KeyPair kp = KeyPair.genKeyPair(jsch, KeyPair.RSA, length);
 
-                File file = new File(a.getFilesDir() + sshKeyName);
+                File file = new File(a.getFilesDir() + "/" + sshKeyName);
                 FileOutputStream out = new FileOutputStream(file, false);
                 if (passphrase.length() > 0) {
                     kp.writePrivateKey(out, passphrase.getBytes());
@@ -119,7 +119,7 @@ public class SshKeyGenDialogFragment extends DialogFragment {
                     kp.writePrivateKey(out);
                 }
 
-                file = new File(a.getFilesDir() + sshKeyName + ".pub");
+                file = new File(a.getFilesDir() + "/" + sshKeyName + ".pub");
                 out = new FileOutputStream(file, false);
                 kp.writePublicKey(out, comment);
                 return null;
@@ -145,7 +145,7 @@ public class SshKeyGenDialogFragment extends DialogFragment {
                 Toast.makeText(a, "SSH-key generated", Toast.LENGTH_LONG).show();
                 DialogFragment df = new ShowSshKeyDialogFragment();
                 Bundle args = new Bundle();
-                args.putString("filename", sshKeyName + ".pub");
+                args.putString("sshKeyName", sshKeyName + ".pub");
                 df.setArguments(args);
                 df.show(a.getFragmentManager(), "public_key");
                 if (SshKeyActivity.getSshKeys(a).size() == 1) {

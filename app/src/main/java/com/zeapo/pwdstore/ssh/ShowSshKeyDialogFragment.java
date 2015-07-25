@@ -31,8 +31,8 @@ public class ShowSshKeyDialogFragment extends DialogFragment {
         builder.setView(view);
 
         TextView textView = (TextView) view.findViewById(R.id.public_key);
-        String filename = getArguments().getString("filename");
-        File file = new File(getActivity().getFilesDir() + filename);
+        String sshKeyName = getArguments().getString("sshKeyName");
+        File file = new File(getActivity().getFilesDir() + "/" + sshKeyName);
         try {
             textView.setText(FileUtils.readFileToString(file));
         } catch (Exception e) {

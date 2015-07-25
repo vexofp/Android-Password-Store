@@ -485,11 +485,11 @@ public class GitActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int id) {
                                     try {
                                         FileUtils.deleteDirectory(localDir);
-                                        String sshKeyName = settings.getString("ssh_key_name", "/.ssh_key");
+                                        String sshKeyName = settings.getString("ssh_key_name", ".ssh_key");
                                         try {
                                             new CloneOperation(localDir, activity)
                                                     .setCommand(hostname)
-                                                    .executeAfterAuthentication(connectionMode, settings.getString("git_remote_username", "git"), new File(getFilesDir() + sshKeyName));
+                                                    .executeAfterAuthentication(connectionMode, settings.getString("git_remote_username", "git"), new File(getFilesDir() + "/" + sshKeyName));
                                         } catch (Exception e) {
                                             //This is what happens when jgit fails :(
                                             //TODO Handle the diffent cases of exceptions
@@ -516,11 +516,11 @@ public class GitActivity extends AppCompatActivity {
                     ).
                     show();
         } else {
-            String sshKeyName = settings.getString("ssh_key_name", "/.ssh_key");
+            String sshKeyName = settings.getString("ssh_key_name", ".ssh_key");
             try {
                 new CloneOperation(localDir, activity)
                         .setCommand(hostname)
-                        .executeAfterAuthentication(connectionMode, settings.getString("git_remote_username", "git"), new File(getFilesDir() + sshKeyName));
+                        .executeAfterAuthentication(connectionMode, settings.getString("git_remote_username", "git"), new File(getFilesDir() + "/" + sshKeyName));
             } catch (Exception e) {
                 //This is what happens when jgit fails :(
                 //TODO Handle the diffent cases of exceptions
@@ -576,9 +576,9 @@ public class GitActivity extends AppCompatActivity {
                     return;
             }
 
-            String sshKeyName = settings.getString("ssh_key_name", "/.ssh_key");
+            String sshKeyName = settings.getString("ssh_key_name", ".ssh_key");
             try {
-                op.executeAfterAuthentication(connectionMode, settings.getString("git_remote_username", "git"), new File(getFilesDir() + sshKeyName));
+                op.executeAfterAuthentication(connectionMode, settings.getString("git_remote_username", "git"), new File(getFilesDir() + "/" + sshKeyName));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -619,9 +619,9 @@ public class GitActivity extends AppCompatActivity {
                     return;
             }
 
-            String sshKeyName = settings.getString("ssh_key_name", "/.ssh_key");
+            String sshKeyName = settings.getString("ssh_key_name", ".ssh_key");
             try {
-                op.executeAfterAuthentication(connectionMode, settings.getString("git_remote_username", "git"), new File(getFilesDir() + sshKeyName));
+                op.executeAfterAuthentication(connectionMode, settings.getString("git_remote_username", "git"), new File(getFilesDir() + "/" + sshKeyName));
             } catch (Exception e) {
                 e.printStackTrace();
             }
