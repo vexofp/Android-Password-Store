@@ -58,7 +58,7 @@ public class SshKeyActivity extends AppCompatActivity {
                 DialogFragment df = new ShowSshKeyDialogFragment();
                 Bundle args = new Bundle();
                 File publicKey = recyclerAdapter.getKeys().get(position).getPublic();
-                args.putString("filename", publicKey.getName());
+                args.putString("filename", "/" + publicKey.getName());
                 df.setArguments(args);
                 df.show(getFragmentManager(), "show");
             }
