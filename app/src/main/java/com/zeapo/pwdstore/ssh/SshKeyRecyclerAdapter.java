@@ -81,9 +81,9 @@ public class SshKeyRecyclerAdapter extends RecyclerView.Adapter<SshKeyRecyclerAd
             holder.publicKeyIcon.setVisibility(View.GONE);
         }
 
-        final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(holder.view.getContext());
-        final String sshKeyName = settings.getString("ssh_key_name", ".ssh_key");
-        if (holder.name.getText().equals(sshKeyName)) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(holder.view.getContext());
+        String sshKeyName = settings.getString("ssh_key_name", ".ssh_key");
+        if (holder.name.getText().toString().equals(sshKeyName)) {
             holder.pickKey.setChecked(true);
             pickedKey = holder.pickKey;
         }
@@ -92,7 +92,9 @@ public class SshKeyRecyclerAdapter extends RecyclerView.Adapter<SshKeyRecyclerAd
             @Override
             public void onClick(View v) {
                 RadioButton radioButton = (RadioButton) v;
-                if (!(holder.name.getText()).equals(sshKeyName)) {
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(holder.view.getContext());
+                String sshKeyName = settings.getString("ssh_key_name", ".ssh_key");
+                if (!(holder.name.getText().toString()).equals(sshKeyName)) {
                     if (pickedKey != null) {
                         pickedKey.setChecked(false);
                     }

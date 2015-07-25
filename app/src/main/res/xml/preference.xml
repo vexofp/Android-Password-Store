@@ -15,7 +15,7 @@
             android:title="@string/pref_ssh_see_key_title" />
         <Preference
             android:key="ssh_key_management"
-            android:title="Manage SSH keys" />
+            android:title="Choose SSH key" />
         <Preference
             android:key="git_delete_repo"
             android:summary="Deletes local repository"
