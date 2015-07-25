@@ -156,7 +156,7 @@ public class SshKeyGenDialogFragment extends DialogFragment {
                 new AlertDialog.Builder(a)
                         .setTitle("Error while trying to generate the ssh-key")
                         .setMessage(a.getResources().getString(R.string.ssh_key_error_dialog_text) + e.getMessage())
-                        .setPositiveButton(getResources().getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
+                        .setPositiveButton(a.getResources().getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 // pass

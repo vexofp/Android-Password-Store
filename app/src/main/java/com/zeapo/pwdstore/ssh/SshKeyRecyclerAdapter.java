@@ -102,6 +102,10 @@ public class SshKeyRecyclerAdapter extends RecyclerView.Adapter<SshKeyRecyclerAd
                 }
             }
         });
+
+        if (!key.hasPublic()) {
+            holder.view.findViewById(R.id.show_key).setVisibility(View.GONE);
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
