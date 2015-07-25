@@ -46,9 +46,9 @@ public class SshKeyActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction()
-                        .add(android.R.id.content, new AddSshKeyFragment())
-                        .addToBackStack("add_key").commit();
+//                getFragmentManager().beginTransaction()
+//                        .add(android.R.id.content, new AddSshKeyFragment())
+//                        .addToBackStack("add_key").commit();
             }
         });
 
