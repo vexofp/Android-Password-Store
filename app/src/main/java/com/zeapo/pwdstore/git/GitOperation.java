@@ -136,7 +136,7 @@ public abstract class GitOperation {
                 passphrase.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
                 passphrase.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 JSch jsch = new JSch();
-                KeyPair keyPair = KeyPair.load(jsch, callingActivity.getFilesDir() + "/.ssh_key");
+                KeyPair keyPair = KeyPair.load(jsch, sshKey.getAbsolutePath());
                 if (keyPair.isEncrypted()) {
                     new AlertDialog.Builder(callingActivity)
                             .setTitle(callingActivity.getResources().getString(R.string.passphrase_dialog_title))
