@@ -51,7 +51,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -292,10 +291,7 @@ public class PgpHandler extends AppCompatActivity implements OpenPgpServiceConne
 
             @Override
             public void run() {
-                Toast.makeText(PgpHandler.this,
-                        "Error from OpenKeyChain : " + error.getMessage(),
-                        Toast.LENGTH_LONG).show();
-                Log.e(Constants.TAG, "onError getErrorId:" + error.getErrorId());
+                Toast.makeText(PgpHandler.this, "Error from OpenKeyChain : " + error.getMessage(), Toast.LENGTH_LONG).show();
                 Log.e(Constants.TAG, "onError getMessage:" + error.getMessage());
             }
         });
@@ -663,9 +659,14 @@ public class PgpHandler extends AppCompatActivity implements OpenPgpServiceConne
     public void encrypt(Intent data) {
         data.setAction(OpenPgpApi.ACTION_ENCRYPT);
 
-        ArrayList<Long> longKeys = new ArrayList<>();
-        for (String keyId : keyIDs) longKeys.add(Long.valueOf(keyId));
-        data.putExtra(OpenPgpApi.EXTRA_KEY_IDS, Longs.toArray(longKeys));
+        // EXTRA_KEY_IDS requires long[]
+        long[] longKeys = new long[keyIDs.size()];
+        int i = 0;
+        for (String keyId : keyIDs) {
+            longKeys[i] = Long.valueOf(keyId);
+            ++i;
+        }
+        data.putExtra(OpenPgpApi.EXTRA_KEY_IDS, longKeys);
 
         data.putExtra(OpenPgpApi.EXTRA_REQUEST_ASCII_ARMOR, true);
 
