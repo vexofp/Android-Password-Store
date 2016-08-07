@@ -24,12 +24,17 @@ import java.util.Set;
 
 import static java.util.Collections.sort;
 
+/**
+ * The store utility class
+ *
+ * Store constants
+ * - store_type : STORE_TYPE_GIT, STORE_TYPE_STANDARD
+ * - store_location : STORE_LOCATION_HIDDEN, STORE_LOCATION_EXTERNAL
+ */
 public class PasswordRepository {
 
     private static Repository repository;
     private static boolean initialized = false;
-
-    protected PasswordRepository(){    }
 
     /**
      * Returns the git repository
@@ -160,7 +165,9 @@ public class PasswordRepository {
     }
 
     public static File getWorkTree() {
-        return repository.getWorkTree();
+        // todo use `Context.getFilesDir().getPath()` for default path
+        final String defaultPath = "/data/data/com.zeapo.pwdstore/files/store";
+        return new File(defaultPath);
     }
 
     /**

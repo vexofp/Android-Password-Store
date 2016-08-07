@@ -1,3 +1,9 @@
+/**
+ * Shared preferences:
+ * - store_path : The absolute path to the active store
+ * - store_type : The type of active store (git, standard)
+ * - store_location : The location of the store (hidden, external)
+ */
 package com.zeapo.pwdstore;
 
 import android.Manifest;
