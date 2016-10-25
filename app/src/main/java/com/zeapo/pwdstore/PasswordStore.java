@@ -129,63 +129,36 @@ public class PasswordStore extends AppCompatActivity {
      * The main entry point to either show the store content or the welcome screen
      */
     private void initView() {
-        File activeStore = storeManager.getActiveStore();
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        // if store_path is empty, then no active store is selected
-        if (settings.getString("store_path", "").isEmpty()) {
-            // if we still have the pass list (after deleting the repository for instance) remove it
-            if (fragmentManager.findFragmentByTag("PasswordsList") != null) {
-                fragmentManager.popBackStack();
+        assert getSupportActionBar() != null;
+
+        if (storeManager.isStoreActive()) {
+            Log.d(TAG, "Current store: " + storeManager.getActiveStorePath());
+            getSupportActionBar().show();
+
+            plist = new PasswordFragment();
+            Bundle args = new Bundle();
+            args.putString("Path", storeManager.getActiveStore().getAbsolutePath());
+
+            // if the activity was started from the autofill settings, the
+            // intent is to match a clicked pwd with app. pass this to fragment
+            if (getIntent().getBooleanExtra("matchWith", false)) {
+                args.putBoolean("matchWith", true);
             }
 
-            // this is a trick to stop the warning
-            assert getSupportActionBar() != null;
+            plist.setArguments(args);
+
+            fragmentTransaction.replace(R.id.main_layout, plist);
+            fragmentTransaction.commit();
+        } else {
+            // otherwise, show the store creation/selection
             getSupportActionBar().hide();
 
             ToCloneOrNot cloneFrag = new ToCloneOrNot();
-            fragmentTransaction.replace(R.id.main_layout, cloneFrag, "ToCloneOrNot");
+            fragmentTransaction.replace(R.id.main_layout, cloneFrag);
             fragmentTransaction.commit();
-        } else {
-            Log.d("PassStr", "Current store: " + activeStore.getAbsolutePath());
-
-            // do not push the fragment if we already have it
-            if (fragmentManager.findFragmentByTag("PasswordsList") == null || settings.getBoolean("repo_changed", false)) {
-                settings.edit().putBoolean("repo_changed", false).apply();
-
-                // todo move this as it is duplicated upthere!
-                if (fragmentManager.findFragmentByTag("PasswordsList") != null) {
-                    fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                }
-
-                // clean things up
-                if (fragmentManager.findFragmentByTag("ToCloneOrNot") != null) {
-                    fragmentManager.popBackStack();
-                }
-
-                plist = new PasswordFragment();
-                Bundle args = new Bundle();
-                args.putString("Path", storeManager.getActiveStore().getAbsolutePath());
-
-                // if the activity was started from the autofill settings, the
-                // intent is to match a clicked pwd with app. pass this to fragment
-                if (getIntent().getBooleanExtra("matchWith", false)) {
-                    args.putBoolean("matchWith", true);
-                }
-
-                plist.setArguments(args);
-
-                fragmentTransaction.addToBackStack("passlist");
-
-                // this is a trick to stop the warning
-                assert getSupportActionBar() != null;
-                getSupportActionBar().show();
-
-                fragmentTransaction.replace(R.id.main_layout, plist, "PasswordsList");
-                fragmentTransaction.commit();
-            }
         }
     }
 
@@ -479,10 +452,10 @@ public class PasswordStore extends AppCompatActivity {
     public void movePasswords(ArrayList<PasswordItem> values) {
         Intent intent = new Intent(this, PgpHandler.class);
         ArrayList<String> fileLocations = new ArrayList<>();
-        for (PasswordItem passwordItem : values){
+        for (PasswordItem passwordItem : values) {
             fileLocations.add(passwordItem.getFile().getAbsolutePath());
         }
-        intent.putExtra("Files",fileLocations);
+        intent.putExtra("Files", fileLocations);
         intent.putExtra("Operation", "SELECTFOLDER");
         startActivityForResult(intent, PgpHandler.REQUEST_CODE_SELECT_FOLDER);
     }
@@ -598,11 +571,11 @@ public class PasswordStore extends AppCompatActivity {
                     startActivityForResult(intent, GitActivity.REQUEST_CLONE);
                     break;
                 case PgpHandler.REQUEST_CODE_SELECT_FOLDER:
-                    Log.d("Moving","Moving passwords to "+data.getStringExtra("SELECTED_FOLDER_PATH"));
+                    Log.d("Moving", "Moving passwords to " + data.getStringExtra("SELECTED_FOLDER_PATH"));
                     Log.d("Moving", TextUtils.join(", ", data.getStringArrayListExtra("Files")));
                     File target = new File(data.getStringExtra("SELECTED_FOLDER_PATH"));
-                    if (!target.isDirectory()){
-                        Log.e("Moving","Tried moving passwords to a non-existing folder.");
+                    if (!target.isDirectory()) {
+                        Log.e("Moving", "Tried moving passwords to a non-existing folder.");
                         break;
                     }
 
@@ -610,18 +583,18 @@ public class PasswordStore extends AppCompatActivity {
                     Git git = new Git(repo);
                     GitAsyncTask tasks = new GitAsyncTask(activity, false, true, CommitCommand.class);
 
-                    for (String string : data.getStringArrayListExtra("Files")){
+                    for (String string : data.getStringArrayListExtra("Files")) {
                         File source = new File(string);
-                        if (!source.exists()){
-                            Log.e("Moving","Tried moving something that appears non-existent.");
+                        if (!source.exists()) {
+                            Log.e("Moving", "Tried moving something that appears non-existent.");
                             continue;
                         }
-                        if (!source.renameTo(new File(target.getAbsolutePath()+"/"+source.getName()))){
-                            Log.e("Moving","Something went wrong while moving.");
-                        }else{
+                        if (!source.renameTo(new File(target.getAbsolutePath() + "/" + source.getName()))) {
+                            Log.e("Moving", "Something went wrong while moving.");
+                        } else {
                             tasks.execute(
                                     git.add().addFilepattern(source.getAbsolutePath().replace(PasswordRepository.getWorkTree() + "/", "")),
-                                    git.commit().setMessage("[ANDROID PwdStore] Moved "+string.replace(PasswordRepository.getWorkTree() + "/", "")+" to "+target.getAbsolutePath().replace(PasswordRepository.getWorkTree() + "/","")+target.getAbsolutePath()+"/"+source.getName()+".")
+                                    git.commit().setMessage("[ANDROID PwdStore] Moved " + string.replace(PasswordRepository.getWorkTree() + "/", "") + " to " + target.getAbsolutePath().replace(PasswordRepository.getWorkTree() + "/", "") + target.getAbsolutePath() + "/" + source.getName() + ".")
                             );
                         }
                     }

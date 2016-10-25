@@ -22,6 +22,14 @@ public class StoreManager {
     }
 
     /**
+     * Checks if there is a configured store
+     * @return true if there is a store, false otherwise
+     */
+    public boolean isStoreActive() {
+        return preferences.getString("store_path", null) != null;
+    }
+
+    /**
      * Get the current active store path
      *
      * @return a the path to corresponding to the active Store
