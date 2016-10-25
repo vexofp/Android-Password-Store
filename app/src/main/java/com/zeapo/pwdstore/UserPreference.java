@@ -39,6 +39,7 @@ import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.zeapo.pwdstore.autofill.AutofillPreferenceActivity;
 import com.zeapo.pwdstore.crypto.PgpHandler;
 import com.zeapo.pwdstore.git.GitActivity;
+import com.zeapo.pwdstore.store.StoreManager;
 import com.zeapo.pwdstore.utils.PasswordRepository;
 
 import org.apache.commons.io.FileUtils;
@@ -65,6 +66,7 @@ public class UserPreference extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             final UserPreference callingActivity = (UserPreference) getActivity();
             final SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
+            final StoreManager storeManager = new StoreManager(getActivity());
 
             addPreferencesFromResource(R.xml.preference);
 
@@ -110,20 +112,18 @@ public class UserPreference extends AppCompatActivity {
                     new AlertDialog.Builder(callingActivity).
                             setTitle(R.string.pref_dialog_delete_title).
                             setMessage(getResources().getString(R.string.dialog_delete_msg)
-                                    + " \n" + PasswordRepository.getWorkTree().toString()).
+                                    + " \n" + storeManager.getActiveStorePath()).
                             setCancelable(false).
                             setPositiveButton(R.string.dialog_delete, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     try {
-                                        FileUtils.cleanDirectory(PasswordRepository.getWorkTree());
-                                        PasswordRepository.closeRepository();
+                                        FileUtils.cleanDirectory(new File(sharedPreferences.getString("store_path", "")));
                                     } catch (Exception e) {
                                         //TODO Handle the diffent cases of exceptions
                                     }
+                                    sharedPreferences.edit().putString("store_path", null).apply();
 
-                                    sharedPreferences.edit().putBoolean("repository_initialized", false).apply();
-                                    dialogInterface.cancel();
                                     callingActivity.finish();
                                 }
                             }).

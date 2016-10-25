@@ -31,7 +31,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.common.primitives.Longs;
 import com.zeapo.pwdstore.BuildConfig;
 import com.zeapo.pwdstore.R;
 import com.zeapo.pwdstore.SelectFolderFragment;
@@ -56,6 +55,7 @@ import java.util.Set;
 
 public class PgpHandler extends AppCompatActivity implements OpenPgpServiceConnection.OnBound {
     private static DelayShow delayTask;
+    private ProgressBar pb;
     private OpenPgpServiceConnection mServiceConnection;
     private Set<String> keyIDs = new HashSet<>();
     SharedPreferences settings;
@@ -300,7 +300,6 @@ public class PgpHandler extends AppCompatActivity implements OpenPgpServiceConne
     }
 
     public class DelayShow extends AsyncTask<Void, Integer, Boolean> {
-        ProgressBar pb;
         boolean clearClipboard = true;
         int current, showTime;
 
@@ -325,8 +324,8 @@ public class PgpHandler extends AppCompatActivity implements OpenPgpServiceConne
                 // treat 0 as forever, and the user must exit and/or clear clipboard on their own
                 cancel(true);
             } else {
-                this.pb = (ProgressBar) findViewById(R.id.pbLoading);
-                this.pb.setMax(showTime);
+                pb = (ProgressBar) findViewById(R.id.pbLoading);
+                pb.setMax(showTime);
             }
         }
 
@@ -368,7 +367,7 @@ public class PgpHandler extends AppCompatActivity implements OpenPgpServiceConne
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            this.pb.setProgress(values[0]);
+            pb.setProgress(values[0]);
         }
 
         public void setClearClipboard(boolean value) {

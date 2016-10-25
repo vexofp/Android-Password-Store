@@ -43,7 +43,6 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -136,7 +135,20 @@ public class PasswordStore extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         // if store_path is empty, then no active store is selected
-        if (!settings.getString("store_path", "").isEmpty()) {
+        if (settings.getString("store_path", "").isEmpty()) {
+            // if we still have the pass list (after deleting the repository for instance) remove it
+            if (fragmentManager.findFragmentByTag("PasswordsList") != null) {
+                fragmentManager.popBackStack();
+            }
+
+            // this is a trick to stop the warning
+            assert getSupportActionBar() != null;
+            getSupportActionBar().hide();
+
+            ToCloneOrNot cloneFrag = new ToCloneOrNot();
+            fragmentTransaction.replace(R.id.main_layout, cloneFrag, "ToCloneOrNot");
+            fragmentTransaction.commit();
+        } else {
             Log.d("PassStr", "Current store: " + activeStore.getAbsolutePath());
 
             // do not push the fragment if we already have it
@@ -174,19 +186,6 @@ public class PasswordStore extends AppCompatActivity {
                 fragmentTransaction.replace(R.id.main_layout, plist, "PasswordsList");
                 fragmentTransaction.commit();
             }
-        } else {
-            // if we still have the pass list (after deleting the repository for instance) remove it
-            if (fragmentManager.findFragmentByTag("PasswordsList") != null) {
-                fragmentManager.popBackStack();
-            }
-
-            // this is a trick to stop the warning
-            assert getSupportActionBar() != null;
-            getSupportActionBar().hide();
-
-            ToCloneOrNot cloneFrag = new ToCloneOrNot();
-            fragmentTransaction.replace(R.id.main_layout, cloneFrag, "ToCloneOrNot");
-            fragmentTransaction.commit();
         }
     }
 
@@ -322,15 +321,13 @@ public class PasswordStore extends AppCompatActivity {
     public void cloneExistingRepository(View view) {
         settings.edit().putString("store_path", storeManager.getActiveStorePath()).apply();
         initView();
-        // NOT IMPLEMENTED YET
-//        initRepository(CLONE_REPO_BUTTON);
+        initRepository(CLONE_REPO_BUTTON);
     }
 
     public void createNewRepository(View view) {
         settings.edit().putString("store_path", storeManager.getActiveStorePath()).apply();
         initView();
-        // NOT IMPLEMENTED YET
-//        initRepository(NEW_REPO_BUTTON);
+        initRepository(NEW_REPO_BUTTON);
     }
 
     private void createRepository() {
@@ -635,8 +632,6 @@ public class PasswordStore extends AppCompatActivity {
     }
 
     protected void initRepository(final int operation) {
-        PasswordRepository.closeRepository();
-
         new AlertDialog.Builder(this)
                 .setTitle("Repository location")
                 .setMessage("Select where to create or clone your password repository.")
