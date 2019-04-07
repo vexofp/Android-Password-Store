@@ -256,4 +256,5 @@
     <string name="no_ssh_api_provider">No SSH API provider found. Is OpenKeychain installed?</string>
     <string name="ssh_api_pending_intent_failed">SSH API pending intent failed</string>
     <string name="ssh_api_unknown_error">Unknown SSH API Error</string>
+    <string name="ssh_openkeystore_clear_keyid">Clear remembered OpenKeystore SSH Key ID</string>
 </resources>
